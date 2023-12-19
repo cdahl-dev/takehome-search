@@ -24,6 +24,9 @@ To run the API locally on [http://127.0.0.1:5000](http://127.0.0.1:5000) (from p
 
     make run
 
+### Configuration
+The log folder and other settings can be adjusted in /app/Settings.py.
+
 ## Usage
 ### Log Search Endpoint
 
@@ -40,7 +43,7 @@ The `logs` endpoint returns the most recent log events within a given file in th
 | `keyword` | string | No | If provided, only lines matching keyword will be returned. |
 
 #### Example Usage
-http://127.0.0.1:5000/logs/?n=100&filename=wifi.log&keyword=kernel
+http://127.0.0.1:5000/logs/?n=100&filename=wifi.log&keyword=install
 
 ## UI
 
