@@ -34,7 +34,7 @@ class AppTest(unittest.TestCase):
                 for i in range(n):
                     assert result[i] == AppTest.FILE_LINES[len(AppTest.FILE_LINES) - i - 1], "Unexpected line content"
 
-    def test_app_(self):
+    def test_app_keywords(self):
         result_index = 0
         for keyword in ['one', 'two', 'three']:
             with self.subTest(keywords=keyword):
