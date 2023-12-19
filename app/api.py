@@ -5,6 +5,17 @@ app = Flask(__name__)
 
 @app.route('/logs/')
 def get_logs():
+    """Returns the most recent lines from a given log file.
+
+    Parameters
+    ----------
+    filename : str
+        The filename to search in.
+    n : int
+        Number of lines to return (optional)
+    keywords : str
+        One or more words to search for - only lines matching all will be returned (optional).
+    """
     result = {}
 
     try:
@@ -31,6 +42,3 @@ def get_logs():
         }
     
     return jsonify(result)
-
-#if __name__ == '__main__':
-#    app.run(threaded=True)
