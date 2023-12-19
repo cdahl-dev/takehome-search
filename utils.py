@@ -7,22 +7,34 @@ DEFAULT_EVENT_COUNT = 1000
 def get_log_events(filename, **kwargs):
     filepath = f"{LOG_FOLDER}/{filename}"
     file_size = os.stat(filepath).st_size
-    chunk_size = min(int(400 * 1024), file_size)
+    chunk_size = min(int(1000 * 1024), file_size)
     result = []
     n = DEFAULT_EVENT_COUNT
+    keyword = "" # support only one for now
 
     if 'n' in kwargs:
         n = kwargs['n']
 
+    if 'keyword' in kwargs:
+        keyword = kwargs['keyword']
+
+    def process_line(line):
+        if not keyword or keyword in line:
+            result.append(line)
+
     def parse_lines(input, buffer):
+        if keyword and not keyword in input:
+            return ""
+
         is_first = True
         last_index = len(input)
         index = input.rfind("\n")
-        while index >= 0:
+        while index >= 0 and len(result) < n:
+            line = input[index+1:last_index]
             if not is_first:
-                result.append(input[index+1:last_index])
+                process_line(line)
             else:
-                result.append(input[index+1:last_index] + buffer)
+                process_line(line + buffer)
                 is_first = False
             
             last_index = index
@@ -45,7 +57,7 @@ def get_log_events(filename, **kwargs):
             content = f.read(offset).decode("utf-8")
             buffer = parse_lines(content, buffer)
 
-    if pos <= 0 and buffer:
-        result.append(buffer)
+    if pos <= 0 and buffer and len(result) < n:
+        process_line(buffer)
 
     return result
