@@ -42,4 +42,22 @@ The `logs` endpoint returns the most recent log events within a given file in th
 #### Example Usage
 http://127.0.0.1:5000/logs/?n=100&filename=wifi.log&keyword=kernel
 
+## Bonus Question
+To request the logs from multiple machines via a primary server, the primary would support support an endpoint (with the same query parameters) that would in turn call the API on each of the secondary servers.
+
+[<img src="/images/distributed_search.png" width="450"/>]()
+
+As a simple approach, the primary could wait for each of the secondary servers to return their N results, then sort these logs by date to get the top N most recent across all servers. Assuming we're using NodeJS (rather than Python), a Promise could be used for each API call along with Promise.all().
+
+Some more considerations:
+- We'd need proper log parsing to extract the date, and ensure that time zones of the secondary machines are taken into account.
+- We'd need the primary server to have a list of the secondary servers configured (along with any authorization required).
+- We'd need to think about tradeoffs between getting the results to the user faster vs the accuracy of the most recent logs. Some of the machines could be slower to respond than others (or even fail), and we'd need to consider how to best handle that for the end user.
+- I'm assuming that the Log Search API is using AWS API Gateway and Lambda, and that the secondary machines could potentially leverage Cribl Edge.
+
+
+
+
+
+
 
