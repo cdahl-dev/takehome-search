@@ -25,5 +25,21 @@ To run the API locally on [http://127.0.0.1:5000](http://127.0.0.1:5000) (from p
     make run
 
 ## Usage
+### Log Search Endpoint
+
+The `logs` endpoint returns the most recent log events within a given file in the /var/log/ folder. It assumes the most recent events are at the bottom of the file.
+
+#### Endpoint URL
+`GET` http://127.0.0.1:5000/logs/
+
+#### Query Parameters
+| **Name**  | **Type**       | **Required**               | **Description**                          |
+| --------- | -------------------- | ---------------------- | ---------------------------------------- |
+| `filename` | string | Yes | Name of log file to search within /var/log/ folder. |
+| `n` | int | No | Number of lines to return. Defaults to 1000. |
+| `keyword` | string | No | If provided, only lines matching keyword will be returned. |
+
+#### Example Usage
+http://127.0.0.1:5000/logs/?n=100&filename=wifi.log&keyword=kernel
 
 
