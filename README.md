@@ -40,10 +40,10 @@ The `logs` endpoint returns the most recent log events within a given file in th
 | --------- | -------------------- | ---------------------- | ---------------------------------------- |
 | `filename` | string | Yes | Name of log file to search within /var/log/ folder. |
 | `n` | int | No | Number of lines to return. Defaults to 1000. |
-| `keyword` | string | No | If provided, only lines matching keyword will be returned. |
+| `keywords` | string | No | If provided, only lines matching all keywords will be returned. |
 
 #### Example Usage
-http://127.0.0.1:5000/logs/?n=100&filename=wifi.log&keyword=install
+http://127.0.0.1:5000/logs/?n=100&filename=wifi.log&keywords=install
 
 ## UI
 

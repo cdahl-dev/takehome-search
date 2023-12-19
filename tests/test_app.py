@@ -34,11 +34,11 @@ class AppTest(unittest.TestCase):
                 for i in range(n):
                     assert result[i] == AppTest.FILE_LINES[len(AppTest.FILE_LINES) - i - 1], "Unexpected line content"
 
-    def test_app_keyword(self):
+    def test_app_(self):
         result_index = 0
         for keyword in ['one', 'two', 'three']:
-            with self.subTest(keyword=keyword):
-                result = get_log_events(AppTest.FILENAME, keyword=keyword)
+            with self.subTest(keywords=keyword):
+                result = get_log_events(AppTest.FILENAME, keywords=keyword)
 
                 assert len(result) == 1, "Incorrect number of results"
 
@@ -47,7 +47,7 @@ class AppTest(unittest.TestCase):
 
     def test_app_keyword_chunk_size(self):
         Settings.CHUNK_SIZE = 2 # ensure that match gets broken up across chunks
-        result = get_log_events(AppTest.FILENAME, keyword="This")
+        result = get_log_events(AppTest.FILENAME, keywords="This")
 
         assert len(result) == len(AppTest.FILE_LINES), "Incorrect number of results"
 
@@ -55,7 +55,20 @@ class AppTest(unittest.TestCase):
             assert result[i] == AppTest.FILE_LINES[len(result) - i - 1], "Unexpected line content"
 
     def test_app_keyword_case_sensitive(self):
-        result = get_log_events(AppTest.FILENAME, keyword="TWO")
+        result = get_log_events(AppTest.FILENAME, keywords="TWO")
         assert len(result) == 1, "Incorrect number of results"
         assert result[0] == AppTest.FILE_LINES[1], "Unexpected line content"
+
+    def test_app_keyword_multi(self):
+        result = get_log_events(AppTest.FILENAME, keywords="one line")
+        assert len(result) == 1, "Incorrect number of results"
+        assert result[0] == AppTest.FILE_LINES[0], "Unexpected line content"
+
+        result = get_log_events(AppTest.FILENAME, keywords="second two")
+        assert len(result) == 1, "Incorrect number of results"
+        assert result[0] == AppTest.FILE_LINES[1], "Unexpected line content"
+
+        result = get_log_events(AppTest.FILENAME, keywords="testing line")
+        assert len(result) == 0, "Incorrect number of results"
+
  

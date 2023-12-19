@@ -15,8 +15,8 @@ def get_logs():
         if request.args.get('n') and request.args.get('n').isnumeric():
             kwargs['n'] = int(request.args.get('n'))
 
-        if request.args.get('keyword'):
-            kwargs['keyword'] = request.args.get('keyword')
+        if request.args.get('keywords'):
+            kwargs['keywords'] = request.args.get('keywords')
         
         log_events = get_log_events(filename, **kwargs)
         result = {

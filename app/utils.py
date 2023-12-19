@@ -8,16 +8,22 @@ def get_log_events(filename, **kwargs):
     
     result = []
     n = Settings.DEFAULT_EVENT_COUNT
-    keyword = "" # support only one for now
+    keywords = []
 
     if 'n' in kwargs:
         n = kwargs['n']
 
-    if 'keyword' in kwargs:
-        keyword = kwargs['keyword']
+    if 'keywords' in kwargs:
+        keywords = kwargs['keywords'].split()
 
     def has_match(input):
-        return not keyword or keyword.lower() in input.lower()
+        input_lower = input.lower()
+        if keywords:
+            for keyword in keywords:
+                if not keyword.lower() in input_lower:
+                    return False
+            
+        return True
     
     def process_line(line):
         if has_match(line):
@@ -25,34 +31,27 @@ def get_log_events(filename, **kwargs):
 
     def parse_lines(input, buffer):
         is_first = True
-        last_index = len(input)
-        input_match = has_match(input)
-        index = input.rfind("\n")
- 
-        # edge case: a match for the keyword could be broken up across chunks
-        if not input_match and buffer:
-            input_match = index >= 0 and has_match(input[index+1:last_index] + buffer)
+        
+        # append the buffer from last time to the input
+        full_input = input + buffer
+        last_index = len(full_input)
+        index = full_input.rfind("\n")
 
-        if input_match:
+        if has_match(full_input):
             while index >= 0 and len(result) < n:
-                line = input[index+1:last_index]
-                if not is_first:
-                    process_line(line)
-                else:
-                    process_line(line + buffer)
-                    is_first = False
+                line = full_input[index+1:last_index]
+                process_line(line)
                 
                 last_index = index
-                index = input.rfind("\n", 0, index)
+                index = full_input.rfind("\n", 0, index)
         else:
             # no match, but we still may have buffer content
-            last_index = input.find("\n")
+            last_index = full_input.find("\n")
             if last_index < 0:
-                last_index = len(input)
+                last_index = len(full_input)
 
         if last_index > 0:
-            extra_buffer = (buffer if is_first else "")
-            return input[0:last_index] + extra_buffer
+            return full_input[0:last_index]
         
         return ""
 
@@ -64,6 +63,7 @@ def get_log_events(filename, **kwargs):
             offset = min(chunk_size, pos)
             f.seek(pos)
             pos = f.seek(-1 * offset, os.SEEK_CUR)
+            # Note: assumes all files are utf-8 for now - should probably detect file encoding
             content = f.read(offset).decode("utf-8")
             buffer = parse_lines(content, buffer)
 
