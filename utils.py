@@ -20,8 +20,8 @@ def get_log_events(filename, **kwargs):
         keyword = kwargs['keyword']
 
     def has_match(input):
-        return not keyword or keyword in input
-
+        return not keyword or keyword.lower() in input.lower()
+    
     def process_line(line):
         if has_match(line):
             result.append(line)
