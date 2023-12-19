@@ -1,16 +1,13 @@
 import os
-
-#LOG_FOLDER = "/var/log"
-LOG_FOLDER = "logs"
-DEFAULT_EVENT_COUNT = 1000
+from app.settings import Settings
 
 def get_log_events(filename, **kwargs):
-    filepath = f"{LOG_FOLDER}/{filename}"
+    filepath = f"{Settings.LOG_FOLDER}/{filename}"
     file_size = os.stat(filepath).st_size
-    chunk_size = min(int(2000 * 1024), file_size)
+    chunk_size = min(Settings.CHUNK_SIZE, file_size)
     
     result = []
-    n = DEFAULT_EVENT_COUNT
+    n = Settings.DEFAULT_EVENT_COUNT
     keyword = "" # support only one for now
 
     if 'n' in kwargs:

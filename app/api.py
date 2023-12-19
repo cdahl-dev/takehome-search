@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from utils import get_log_events
+from app.utils import get_log_events
 
 app = Flask(__name__)
 
