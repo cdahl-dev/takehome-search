@@ -8,4 +8,7 @@ def get_logs():
     filename = request.args.get('filename')
     n = request.args.get('n')
     keywords = request.args.get('keywords')
-    return jsonify(get_log_events(filename))
+    result = {
+        'log_events': get_log_events(filename)
+    }
+    return jsonify(result)
