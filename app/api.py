@@ -5,23 +5,32 @@ app = Flask(__name__)
 
 @app.route('/logs/')
 def get_logs():
-    filename = request.args.get('filename')
+    result = {}
 
-    kwargs = {}
+    try:
+        filename = request.args.get('filename')
 
-    if request.args.get('n'):
-        kwargs['n'] = int(request.args.get('n'))
+        kwargs = {}
 
-    if request.args.get('keyword'):
-        kwargs['keyword'] = request.args.get('keyword')
-    
-    log_events = get_log_events(filename, **kwargs)
-    result = {
-        'count': len(log_events),
-        'log_events': log_events
-    }
+        if request.args.get('n') and request.args.get('n').isnumeric():
+            kwargs['n'] = int(request.args.get('n'))
+
+        if request.args.get('keyword'):
+            kwargs['keyword'] = request.args.get('keyword')
+        
+        log_events = get_log_events(filename, **kwargs)
+        result = {
+            'success': True,
+            'count': len(log_events),
+            'log_events': log_events
+        }
+    except Exception as e:
+        result = {
+            'success': False,
+            'error_message': str(e)
+        }
     
     return jsonify(result)
 
-if __name__ == '__main__':
-    app.run(threaded=True)
+#if __name__ == '__main__':
+#    app.run(threaded=True)
