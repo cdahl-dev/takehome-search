@@ -42,6 +42,10 @@ The `logs` endpoint returns the most recent log events within a given file in th
 #### Example Usage
 http://127.0.0.1:5000/logs/?n=100&filename=wifi.log&keyword=kernel
 
+## UI
+
+I opted out of creating the additional UI, as Postman was sufficient for my testing purposes. A Postman collection can be found at files/CriblLogSearch.postman_collection.json.
+
 ## Bonus Question
 To request the logs from multiple machines via a primary server, the primary would support support an endpoint (with the same query parameters) that would in turn call the API on each of the secondary servers.
 
