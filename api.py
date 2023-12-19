@@ -6,9 +6,15 @@ app = Flask(__name__)
 @app.route('/logs/')
 def get_logs():
     filename = request.args.get('filename')
-    n = request.args.get('n')
     keywords = request.args.get('keywords')
+
+    kwargs = {}
+
+    if request.args.get('n'):
+        kwargs['n'] = int(request.args.get('n'))
+    
     result = {
-        'log_events': get_log_events(filename)
+        'log_events': get_log_events(filename, **kwargs)
     }
+    
     return jsonify(result)

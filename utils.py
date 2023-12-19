@@ -2,13 +2,17 @@ import os
 
 #LOG_FOLDER = "/var/log"
 LOG_FOLDER = "logs"
+DEFAULT_EVENT_COUNT = 1000
 
-def get_log_events(filename):
+def get_log_events(filename, **kwargs):
     filepath = f"{LOG_FOLDER}/{filename}"
     file_size = os.stat(filepath).st_size
     chunk_size = min(int(400 * 1024), file_size)
     result = []
-    n = 1000
+    n = DEFAULT_EVENT_COUNT
+
+    if 'n' in kwargs:
+        n = kwargs['n']
 
     def parse_lines(input, buffer):
         is_first = True
