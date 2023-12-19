@@ -1,0 +1,48 @@
+{
+	"info": {
+		"_postman_id": "2ebdb46c-ac65-431c-91a7-1a6061c9252c",
+		"name": "Cribl Log Search",
+		"description": "Collection to support the Take Home test for Cribl.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30507636"
+	},
+	"item": [
+		{
+			"name": "Get Logs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/logs/?n=1000&filename=wifi.log&keyword=install",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"logs",
+						""
+					],
+					"query": [
+						{
+							"key": "n",
+							"value": "1000"
+						},
+						{
+							"key": "filename",
+							"value": "wifi.log"
+						},
+						{
+							"key": "keyword",
+							"value": "install"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
