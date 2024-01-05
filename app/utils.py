@@ -1,7 +1,8 @@
 import os
+import re
 from app.settings import Settings
 
-def get_log_events(filename, **kwargs):
+def get_log_events(filename, **kwargs):    
     filepath = f"{Settings.LOG_FOLDER}/{filename}"
     file_size = os.stat(filepath).st_size
     chunk_size = min(Settings.CHUNK_SIZE, file_size)
@@ -9,29 +10,28 @@ def get_log_events(filename, **kwargs):
     result = []
     n = Settings.DEFAULT_EVENT_COUNT
     keywords = []
+    keyword_pattern = None
 
     if 'n' in kwargs:
         n = kwargs['n']
 
     if 'keywords' in kwargs:
-        keywords = kwargs['keywords'].split()
+        keywords = kwargs['keywords'].lower().split()
+        if keywords:
+            keyword_pattern = re.compile('(?=.*' + ')(?=.*'.join(keywords) + ')', re.IGNORECASE | re.DOTALL)
 
     def has_match(input):
-        input_lower = input.lower()
-        if keywords:
-            for keyword in keywords:
-                if not keyword.lower() in input_lower:
-                    return False
-            
-        return True
+        #input_lower = input.lower()
+        if (not keyword_pattern) or keyword_pattern.match(input):
+            return True
+        
+        return False
     
     def process_line(line):
         if has_match(line):
             result.append(line)
 
     def parse_lines(input, buffer):
-        is_first = True
-        
         # append the buffer from last time to the input
         full_input = input + buffer
         last_index = len(full_input)
