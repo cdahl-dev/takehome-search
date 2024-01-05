@@ -19,7 +19,7 @@ class AppTest(unittest.TestCase):
                 Settings.CHUNK_SIZE = chunk_size
                 result = get_log_events(AppTest.FILENAME)
 
-                assert len(result) == len(AppTest.FILE_LINES), "Incorrect number of results"
+                assert len(result) == len(AppTest.FILE_LINES), "Incorrect number of results (Expected all)"
 
                 for i in range(len(result)):
                     assert result[i] == AppTest.FILE_LINES[len(result) - i - 1], "Unexpected line content"
@@ -29,7 +29,7 @@ class AppTest(unittest.TestCase):
             with self.subTest(n=n):
                 result = get_log_events(AppTest.FILENAME, n=n)
 
-                assert len(result) == n, "Incorrect number of results"
+                assert len(result) == n, f"Incorrect number of results (Expected {n})"
 
                 for i in range(n):
                     assert result[i] == AppTest.FILE_LINES[len(AppTest.FILE_LINES) - i - 1], "Unexpected line content"
@@ -40,7 +40,7 @@ class AppTest(unittest.TestCase):
             with self.subTest(keywords=keyword):
                 result = get_log_events(AppTest.FILENAME, keywords=keyword)
 
-                assert len(result) == 1, "Incorrect number of results"
+                assert len(result) == 1, f"Incorrect number of results (Expected 1 for {keyword})"
 
                 assert result[0] == AppTest.FILE_LINES[result_index], "Unexpected line content"
                 result_index += 1
@@ -49,26 +49,26 @@ class AppTest(unittest.TestCase):
         Settings.CHUNK_SIZE = 2 # ensure that match gets broken up across chunks
         result = get_log_events(AppTest.FILENAME, keywords="This")
 
-        assert len(result) == len(AppTest.FILE_LINES), "Incorrect number of results"
+        assert len(result) == len(AppTest.FILE_LINES), "Incorrect number of results (Expected all)"
 
         for i in range(len(result)):
             assert result[i] == AppTest.FILE_LINES[len(result) - i - 1], "Unexpected line content"
 
     def test_app_keyword_case_sensitive(self):
         result = get_log_events(AppTest.FILENAME, keywords="TWO")
-        assert len(result) == 1, "Incorrect number of results"
+        assert len(result) == 1, "Incorrect number of results (Expected 1)"
         assert result[0] == AppTest.FILE_LINES[1], "Unexpected line content"
 
     def test_app_keyword_multi(self):
         result = get_log_events(AppTest.FILENAME, keywords="one line")
-        assert len(result) == 1, "Incorrect number of results"
+        assert len(result) == 1, "Incorrect number of results (Expected 1 - one line)"
         assert result[0] == AppTest.FILE_LINES[0], "Unexpected line content"
 
         result = get_log_events(AppTest.FILENAME, keywords="second two")
-        assert len(result) == 1, "Incorrect number of results"
+        assert len(result) == 1, "Incorrect number of results (Expected 1 - second two)"
         assert result[0] == AppTest.FILE_LINES[1], "Unexpected line content"
 
         result = get_log_events(AppTest.FILENAME, keywords="testing line")
-        assert len(result) == 0, "Incorrect number of results"
+        assert len(result) == 0, "Incorrect number of results (Expected none)"
 
  
